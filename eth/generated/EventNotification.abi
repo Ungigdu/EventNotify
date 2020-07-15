@@ -1,0 +1,1 @@
+[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"msg","type":"string"}],"name":"Notify","type":"event"},{"constant":false,"inputs":[{"internalType":"string","name":"m","type":"string"}],"name":"broadCast","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]
