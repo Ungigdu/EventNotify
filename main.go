@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/Ungigdu/EventNofify/eth"
+	"github.com/Ungigdu/EventNotify/eth"
 )
 
 func main()  {
 	m := make(chan string)
-	go eth.WatchNotification(m)
+	eth.WatchNotification(m)
 	for {
 		select {
 		case s:=<-m:

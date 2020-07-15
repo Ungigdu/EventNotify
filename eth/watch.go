@@ -9,14 +9,14 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-func WatchNotification(m chan string){
+func WatchNotification(m chan string) error{
 	client, err := ethclient.Dial(AccessPoint)
 	if err != nil{
-		panic("can't get access to ropsten")
+		return err
 	}
 	instance, err := generated.NewEventNotification(common.HexToAddress(EventNotificationAddress),client)
 	if err != nil {
-		panic("can't recover contract")
+		return err
 	}
 	logs := make(chan *generated.EventNotificationNotify)
 	sub, err := instance.WatchNotify(&bind.WatchOpts{
@@ -24,15 +24,20 @@ func WatchNotification(m chan string){
 		Context: context.Background(),
 	},logs)
 	if err != nil {
-		panic("can't subscript event")
+		return err
 	}
-	for {
-		select {
-		case e :=<- sub.Err():
-			fmt.Println("subscript error",e)
-			return
-		case log := <-logs:
-			m <- log.Msg
+
+	go func() {
+		for {
+			select {
+			case e :=<- sub.Err():
+				fmt.Println("subscript error",e)
+				return
+			case log := <-logs:
+				m <- log.Msg
+			}
 		}
-	}
+	}()
+
+	return nil
 }
